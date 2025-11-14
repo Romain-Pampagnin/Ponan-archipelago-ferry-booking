@@ -6,5 +6,6 @@ class SAE
     {
         Console.WriteLine("Hello World!");
         Console.WriteLine("Louis tié un tigre");
+        Console.WriteLine("Louis tié un tyrannausaure");
     }
 }
