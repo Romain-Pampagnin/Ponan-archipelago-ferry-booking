@@ -10,10 +10,6 @@ class SAE11
         int choix, i;
         string[] Lignes = new string[4]{"Lorient - Groix","Groix - Lorient","Quiberon - Le Palais","Le Palais - Quiberon"};
         
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("tié un tigre mais écrit en rouge");
-
-
 
         //menu
         while(menu == true)
