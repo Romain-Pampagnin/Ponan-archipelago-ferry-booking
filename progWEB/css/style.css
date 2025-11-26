@@ -1,0 +1,135 @@
+html{
+    background-color: #fff2e6; 
+	font-size: 16px;
+    font-family: Helvetica;
+}
+
+nav a {
+	color: #0B638C; /* Couleur de texte des liens (blanc) */
+	font-weight: bold; /* Texte en gras */
+	text-decoration: none; /* Retire le soulignement des liens */
+}
+
+nav li:hover a, 
+li.current-menu a {
+    color: #000000; /* Change la couleur du texte des liens au survol ou si c'est l'item actif */
+}
+
+nav li:hover {
+	width: 105%; /* Agrandit légèrement l'item de menu lors du survol */
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+}
+
+figure {
+    margin: 0;
+}
+
+
+.InfoTrajet{
+    color: white;
+}
+
+.InfoReservation{
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 2rem;
+    height: 100%; 
+}
+
+.InfoVehicule{
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 2rem;
+    height: 100%; 
+}
+
+.CarteVehicule img{
+    border: 2px solid black;
+    border-radius: 2rem;
+}
+
+
+.CartePassager h1 {
+    color: white;
+    text-align: center;
+}
+
+.CartePassager img {
+    border: 2px solid black;
+    border-radius: 2rem;
+}
+
+.ColonneGauche{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.ColonneDroite{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.CartePassager{
+    display: flex;
+    flex-direction: row;
+
+    background-color: #0B638C;
+    border: 2px solid black;
+    border-radius: 2rem;
+    margin: 1rem;
+}
+
+
+.CarteVehicule{
+    display: flex;
+
+    background-color: #0B638C;
+    border: 2px solid black;
+    border-radius: 2rem;
+    margin: 1rem;
+}
+
+.CarteVehicule h1 {
+    color: white;
+    text-align: center;
+}
+
+.CarteVehiculex img {
+    border: 2px solid black;
+    border-radius: 2rem;
+}
+
+
+
+.InfoTrajet article{
+    display: flex;
+    flex-direction: row;
+}
+
+.InfoTrajet > article > p:first-child{
+    margin-right: 1rem;
+    font-weight: bold;
+}
+
+.InfoTrajet  p:nth-child(2)
+{
+    background-color: white;
+    color: black;
+}
+
+.InfoReservation article{
+    display: flex;
+    flex-direction: row;
+}
+
+.InfoReservation > article > p:first-child{
+    margin-right: 1rem;
+    font-weight: bold;
+}
+
