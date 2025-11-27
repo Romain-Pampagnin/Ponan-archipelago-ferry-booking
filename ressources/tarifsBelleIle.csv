@@ -1,0 +1,16 @@
+adu26p;Adulte 26 ans et plus;18.80
+jeu1825;Jeune 18 à 25 ans inclus;14.10
+enf417;Enfant 4 à 17 ans inclus;11.65
+bebe;Bébé moins de 4 ans;0
+ancomp;Animal de compagnie;3.35
+trot;Trottinette électrique;4.70
+velo;Vélo ou remorque à vélo;8.20
+velelec;Vélo électrique;11.00
+cartand;Vélo cargo ou tandem;16.45
+mobil;Deux-roues <= 125 cm3;23.35
+moto;Deux-roues > 125 cm3;66.40
+cat1;Voiture de moins de 4m;98.50
+cat2;Voiture de 4m à 4.39m;117.20
+cat3;Voiture de 4.40m à 4.79m;176.90
+cat4;Voiture de 4.80m et plus;213.35
+camp;Camping-car - véhicule plus de 2.10m de haut;332.70
