@@ -84,7 +84,7 @@ categoriePassager.innerHTML = addams.passagers[numPassager].codeCategorie;
 let PassagerPrecedent = function(){
 	if (numPassager == 0)
 	{
-		throw new Error("Pas de passager precedent");
+		return;
     }
 	
 	numPassager--;
@@ -98,7 +98,7 @@ let PassagerPrecedent = function(){
 let PassagerSuivant = function(){
 	if (numPassager == nbPassagers - 1)
 	{
-		throw new Error("Pas de passager Suivant");
+		return;
     }
 	
 	numPassager++;
