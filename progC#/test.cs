@@ -121,7 +121,7 @@ class SAE11
         Dictionary <int,string> itineraires = new Dictionary<int, string>(); //dictionnaire qui stocke les itinéraires
         List <string> logoMenu = new List<string>();
         Dictionary <int,Dictionary<int,Journee>> horairesComplets = new Dictionary<int,Dictionary<int,Journee>>(); //dictionnaire qui stocke tous les horaires pour tous les itinéraires
-        Dictionary <int,Dictionary<string,Tarif>> tarifsComplets = newDictionary<int,Dictionary<string,Tarif>>();
+        Dictionary <int,Dictionary<string,Tarif>> tarifsComplets = new Dictionary<int,Dictionary<string,Tarif>>();
         Dictionary <char,string> charTable = new Dictionary<char,string>();
         Dictionary <string,string> bateauTable = new Dictionary<string, string>();
 
@@ -147,12 +147,12 @@ class SAE11
         itineraires.Add(4,"Le Palais - Quiberon");
 
         //chargement des fichiers horaires
-        if(File.Exists("GroixLorientNov25.csv") && File.Exists("LorientGroixNov25.csv") && File.Exists("LePalaisQuiberonNov25.csv") && File.Exists("QuiberonLePalaisNov25.csv"))
+        if(File.Exists("../ressources/GroixLorientNov25.csv") && File.Exists("../ressources/LorientGroixNov25.csv") && File.Exists("../ressources/LePalaisQuiberonNov25.csv") && File.Exists("../ressources/QuiberonLePalaisNov25.csv"))
         {
-            horairesComplets.Add(1,ajouterHorairesItineraire("LorientGroixNov25.csv"));
-            horairesComplets.Add(2,ajouterHorairesItineraire("GroixLorientNov25.csv"));
-            horairesComplets.Add(3,ajouterHorairesItineraire("QuiberonLePalaisNov25.csv"));
-            horairesComplets.Add(4,ajouterHorairesItineraire("LePalaisQuiberonNov25.csv"));
+            horairesComplets.Add(1,ajouterHorairesItineraire("../ressources/LorientGroixNov25.csv"));
+            horairesComplets.Add(2,ajouterHorairesItineraire("../ressources/GroixLorientNov25.csv"));
+            horairesComplets.Add(3,ajouterHorairesItineraire("../ressources/QuiberonLePalaisNov25.csv"));
+            horairesComplets.Add(4,ajouterHorairesItineraire("../ressources/LePalaisQuiberonNov25.csv"));
         }
         else
         {
@@ -160,7 +160,7 @@ class SAE11
         }
 
         //chargement des fichiers tarifs
-        if(File.Exists("tarifsGroix.csv") && File.Exists("tarifsBelleIle.csv"))
+        if(File.Exists("../ressources/tarifsGroix.csv") && File.Exists("../ressources/tarifsBelleIle.csv"))
         {
             
         }
@@ -172,10 +172,10 @@ class SAE11
 
 
         //menu
-        if (File.Exists("imgMenu.txt"))
+        if (File.Exists("../ressources/imgMenu.txt"))
         {
             //création du flux de type texte pour lire des fichiers
-            FileStream fsImageMenu = new FileStream("imgMenu.txt", FileMode.Open, FileAccess.Read);
+            FileStream fsImageMenu = new FileStream("../ressources/imgMenu.txt", FileMode.Open, FileAccess.Read);
             StreamReader srImageMenu = new StreamReader(fsImageMenu);
             isLogoMenu = true;
 
