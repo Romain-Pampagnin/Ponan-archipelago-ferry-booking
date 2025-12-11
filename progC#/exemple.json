@@ -1,0 +1,48 @@
+[
+  {
+    "reservation": {
+      "nom": "Famille Addams",
+      "idLiaison": 1,
+      "date": "2025-11-01",
+      "heure": "09:45",
+      "horodatage": "2025-10-20 16:55:14"
+    },
+    "passagers": [
+      {
+        "nom": "Addams",
+        "prenom": "Gomez",
+        "codeCategorie": "adu26p"
+      },
+      {
+        "nom": "Addams",
+        "prenom": "Morticia",
+        "codeCategorie": "adu26p"
+      },
+      {
+        "nom": "Addams",
+        "prenom": "Lurch",
+        "codeCategorie": "je1825"
+      },
+      {
+        "nom": "Addams",
+        "prenom": "Mercredi",
+        "codeCategorie": "enf417"
+      },
+      {
+        "nom": "Addams",
+        "prenom": "Pugsley",
+        "codeCategorie": "bebe"
+      }
+    ],
+    "vehicules": [
+      {
+        "codeCategorie": "cat4",
+        "quantite": 1
+      },
+      {
+        "codeCategorie": "trot",
+        "quantite": 2
+      }
+    ]
+  }
+]
