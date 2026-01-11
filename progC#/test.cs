@@ -85,7 +85,25 @@ class SAE11
             quantite = qt;
         }
     }
+    public struct Traversee //structure Traversée et son contructeur
+    {
+        public string nom;
+        public int idLiaison;
+        public string date;
+        public string heure;
+        public string horodatage;
 
+        //constructeur
+        public Traversee(string nm, int idL, string dt, string hr, string horodat)
+        {
+            nom = nm;
+            idLiaison = idL;
+            date = dt;
+            heure = hr;
+            horodatage = horodat;
+        }
+
+    }
     public struct Reservation
     {
         public string nom;
@@ -219,7 +237,35 @@ class SAE11
         }
         Console.WriteLine();
     }
-   static int VerifSaisie(char[] choixPossibles, string question) //retourne forcément l'indice du char saisi (indice en fonction de la liste fournie)
+    static int ConfirmYN (string question)
+    {
+        //déclarations
+        char saisie;
+        string saisie2;
+        int retour = -1;
+
+        while(retour == -1)
+        {
+            Console.Write($"{question}");
+            saisie = Console.ReadKey().KeyChar;     //stocke le char de la touche dans saisie
+            saisie2 = saisie.ToString().ToUpper();  //converti saisie en un string, puis applique la méthode ToUpper
+            if(saisie2.Length == 1 && saisie2[0] == 'Y')
+            {
+                retour = 1;
+            }
+            else if(saisie2.Length == 1 && saisie2[0] == 'N')
+            {
+                retour = 0;
+            }
+            else
+            {
+                Console.Write("\n");
+            }
+        }
+        Console.WriteLine();
+        return retour;
+    }
+   static int VerifSaisieChar(char[] choixPossibles, string question) //retourne forcément l'indice du char saisi (indice en fonction de la liste fournie)
     {
         //déclarations
         int sortie = -1;
@@ -256,7 +302,42 @@ class SAE11
         }
         return sortie;
     }
+    static int VerifSaisieString(string[] choixPossibles, string question) //retourne forcément l'indice du char saisi (indice en fonction de la liste fournie)
+    {
+        //déclarations
+        int sortie = -1;
+        int i;
+        bool trouve = false;
+        string entree;
 
+        while(sortie == -1)
+        {
+            //affichage de la question
+            Console.Write(question);
+            entree = Console.ReadLine();
+            if(entree.Length <= 2 /*&& entree.GetType() == n.GetType()*/)
+            {
+                i = 0;
+                while(i < choixPossibles.Length && !trouve) //boucle pour vérifier 
+                {
+                    if(choixPossibles[i] == entree)
+                    {
+                        trouve = true;
+                    }
+                    else
+                    {
+                        i ++;
+                    }
+                }
+
+                if(trouve)
+                {
+                    sortie = i +1;
+                }
+            }
+        }
+        return sortie;
+    }
     static void AffichageMenu(ref int choix)
     {
         //affichage
@@ -270,7 +351,7 @@ class SAE11
         //choix user
         string questionMenu ="Sélectionnez une option : ";
         char[]choixMenu = new char[5] {'1','2','3','4','5'};
-        choix = VerifSaisie(choixMenu, questionMenu);
+        choix = VerifSaisieChar(choixMenu, questionMenu);
     }
     static void AffichageTarifs(int idLigne, Dictionary<int,Dictionary<string,Tarif>> tarifsComplets)
     {
@@ -294,7 +375,6 @@ class SAE11
             Console.WriteLine("Erreur, fichier(s) tarifs manquant(s).");
         }
     }
-
     static void ChargementDicoHoraires(ref Dictionary <int,Dictionary<int,Journee>> horairesComplets)
     {
         //chargement des fichiers horaires
@@ -310,9 +390,370 @@ class SAE11
             Console.WriteLine("Erreur: fichier(s) horaires manquant(s).");
         }
     }
-    static void Reservation()
+    static void ChargementDicoCatVehicules (ref Dictionary <string,string> catVehicules)
+    {
+        //déclarations
+        string ligne;
+        char[] separateur = new char[] {';'};
+        string[] categorie;
+        
+        //chargement du fichier catVehicules
+        if(File.Exists("../ressources/catVehicules.csv"))
+        {
+            //création du flux de type texte pour lire des fichiers
+            FileStream fsCatVehic = new FileStream("../ressources/catVehicules.csv", FileMode.Open, FileAccess.Read);
+            StreamReader srCatVehic = new StreamReader(fsCatVehic);
+
+            //parcourir le flux
+            while (!srCatVehic.EndOfStream)
+            {
+                //lecture d'une ligne
+                ligne = srCatVehic.ReadLine();
+                categorie = ligne.Split(separateur);
+                catVehicules.Add(categorie[0],categorie[1]);
+            }
+
+            //fermeture du flux
+            srCatVehic.Close();
+
+            //test affichage du dico
+            // foreach(string cle in catVehicules.Keys)
+            // {
+            //     Console.WriteLine($"clé : {cle}, valeur : {catVehicules[cle]}");
+            // }
+            // Console.ReadKey();
+        }
+        else
+        {
+            Console.WriteLine("Erreur: fichier catVehicules.csv manquant.");
+        }
+    }
+    static int CreerResa(Dictionary <int,string> itineraires, ref Dictionary<int,Dictionary<int,Journee>> horairesComplets, ref Dictionary<char,string> charTable, Dictionary<string,string> catVehicules)
+    {
+        //déclarations
+        int choixLigne, choixJour;
+        int retour = 0;
+        string horodatage;
+        List <Passager> passagers = new List<Passager>();
+        List <Vehicule> vehicules = new List<Vehicule>();
+
+        //initialisation de la liste des véhicules
+        foreach (string categorie in catVehicules.Keys)
+        {
+            Vehicule nouveauVehicule = new Vehicule(categorie, 0);
+            vehicules.Add(nouveauVehicule);
+        }
+        
+        affichageLignes(itineraires);
+        Console.WriteLine();
+        string questionChoix1 = "Choissisez le numéro de la ligne sur laquelle vous voulez réserver : ";
+        char[]choixPossiblesQ1 = new char[4] {'1','2','3','4'};
+        choixLigne = VerifSaisieChar(choixPossiblesQ1, questionChoix1);
+
+        //afficher la ligne sélectionnée et ses horaires
+        Console.Clear();
+        Console.WriteLine($"Ligne {itineraires[choixLigne]} :");
+        Console.WriteLine();
+        affichageHorairesItineraire(choixLigne, ref horairesComplets, ref charTable);
+        Console.WriteLine();
+        string questionChoix2 = "Choisissez le numéro du jour de votre traversée : ";
+        string[]choixPossiblesQ2 = new string[30] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"};
+        choixJour = VerifSaisieString(choixPossiblesQ2, questionChoix2);
+
+        //basculer le jour vers un string
+        string choixJourString;
+        if(choixJour < 10)
+        {
+            choixJourString = "2025-11-0" + choixJour.ToString();
+        }
+        else
+        {
+            choixJourString = "2025-11-" + choixJour.ToString();
+        }
+        
+
+        //afficher la ligne et le jour choisi pour choix horaire
+        Console.Clear();
+        Console.WriteLine($"Ligne {itineraires[choixLigne]} :");
+        Console.WriteLine();
+        Console.WriteLine($"Journée du {choixJour}/11 :");
+        Console.WriteLine();
+        int numJour = 0;
+        
+        //choix de l'horaire
+        foreach(KeyValuePair <string,string> heure in horairesComplets[choixLigne][choixJour].horaires)
+        {
+            numJour ++;
+            Console.WriteLine($"    > {numJour} : {heure.Key}");
+        }
+        Console.WriteLine();
+        
+        string questionChoix3 = "Choissisez l'horaire de votre trajet : ";
+        char[]choixPossiblesQ3 = new char[numJour];
+        for (int i = 0; i < numJour; i++)
+        {
+            choixPossiblesQ3[i] = (char)('0' + i + 1);
+        }
+        int choixHoraire = VerifSaisieChar(choixPossiblesQ3, questionChoix3);
+
+        //récupération de l'horaire sous format string
+        string choixHoraireString = "";
+        int y = 1;
+        foreach (string cle in horairesComplets[choixLigne][choixJour].horaires.Keys)
+        {
+            if(y == choixHoraire)
+            {
+                choixHoraireString = cle;
+            }
+            y++;
+        }
+        
+        //confirmation choix traversée date heure
+        Console.Clear();
+        Console.WriteLine($"Vous avez choisi un trajet sur la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
+        Console.WriteLine();
+        if(ConfirmYN("Confirmer [y/n] ? ") == 1)
+        {
+            Console.WriteLine("Réservation confirmée.");
+            horodatage = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"); //HH pour avoir l'heure en format 24, MM pour mois, mm pour minutes
+            Console.WriteLine();
+            Console.WriteLine("Appuyez sur une touche pour l'enregistrement des passagers.");
+            Console.ReadKey();
+            
+            Console.Clear();
+            Console.WriteLine($"Réservation pour la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
+            Console.WriteLine();
+
+            //enregistrement des passagers
+            Console.WriteLine("Passager 1 : ");
+            passagers.Add(CreerPassager(ref passagers));
+            Console.WriteLine();
+
+            bool passagersFinis = false;
+            while(!passagersFinis)
+            {
+                if(ConfirmYN("Ajouter un autre passager [y/n] ? ") == 1)
+                {
+                    Console.Clear();
+                    passagers.Add(CreerPassager(ref passagers)); 
+                    Console.WriteLine();
+                }
+                else
+                {
+                    passagersFinis = true;
+                }
+            }
+
+            //récapitulatif des passagers saisis
+            Console.Clear();
+            Console.WriteLine($"Réservation pour la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
+            Console.WriteLine($"Vous avez saisi {passagers.Count} passager(s) :");
+            Console.WriteLine(" _______________________________________________ ");
+            Console.WriteLine("| Nom             | Prénom          | Catégorie |");
+            for(int i = 0; i < passagers.Count; i ++)
+            {
+                Console.WriteLine($"| {passagers[i].nom.PadRight(15)} | {passagers[i].prenom.PadRight(15)} | {passagers[i].codeCategorie.PadRight(9)} |");
+            }
+            Console.WriteLine("|_______________________________________________|");
+            Console.WriteLine();
+            Console.WriteLine();
+
+            //enregistrement des véhicules
+            if(ConfirmYN("Voulez-vous enregistrer un ou des véhicules [y/n] ? ") == 1)
+            { 
+                CreerVehicule(ref catVehicules, ref vehicules);
+            }
+            
+            //purger les catégories de véhicules avec une quantité nulle
+            int vehicCount = vehicules.Count;
+            for (int i = 0; i < vehicCount; i++)
+            {
+                if(vehicules[i].quantite == 0)
+                {
+                    vehicules.RemoveAt(i);
+                    vehicCount = vehicCount -1;
+                    i = i-1;
+                }
+            }
+
+            //récapitulatif total
+            Console.Clear();
+            Console.WriteLine("Récapitulatif de votre réservation");
+            Console.WriteLine();
+            Console.WriteLine("TRAJET :");
+            Console.WriteLine($"Réservation pour la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
+            Console.WriteLine();
+            Console.WriteLine("PASSAGER(S) :");
+            Console.WriteLine(" _______________________________________________ ");
+            Console.WriteLine("| Nom             | Prénom          | Catégorie |");
+            for(int i = 0; i < passagers.Count; i ++)
+            {
+                Console.WriteLine($"| {passagers[i].nom.PadRight(15)} | {passagers[i].prenom.PadRight(15)} | {passagers[i].codeCategorie.PadRight(9)} |");
+            }
+            Console.WriteLine("|_______________________________________________|");
+            Console.WriteLine();
+            Console.WriteLine("VEHICULE(S) :");
+            Console.WriteLine(" _______________________________________________________ ");
+            Console.WriteLine("| Description                                  | Nombre |");
+            foreach (Vehicule vehicule in vehicules)
+            {
+                Console.WriteLine($"| {catVehicules[vehicule.codeCategorie].PadRight(44)} | {vehicule.quantite.ToString().PadRight(6)} |");
+            }
+            Console.WriteLine("|_______________________________________________________|");
+            Console.WriteLine();
+            
+            if(ConfirmYN("Confirmez la réservation [y/n] ? ") == 1)
+            {
+                retour = 1;
+            }
+            else
+            {
+                Console.WriteLine("Réservation annulée.");
+                Console.WriteLine();
+            }
+
+            //donner le nom du premier passager à la réservation
+            string nomResa = "Groupe " + passagers[0].nom;
+
+            //créer la structure réservation
+            Reservation reservation = new Reservation(nomResa, choixLigne, choixJourString, choixHoraireString, horodatage, passagers, vehicules);
+
+        }
+        else
+        {
+            Console.WriteLine("Réservation annulée.");
+            Console.WriteLine();
+        }
+        return retour;
+    }
+    static void ExportJson(Reservation resa)
     {
         
+    }
+    static Passager CreerPassager(ref List <Passager> passagersList)
+    {
+        //déclarations
+        string nom, prenom;
+        string codeCat = "";
+        int age;
+
+        //affichage des passagers déjà saisis
+        Console.WriteLine(" _______________________________________________ ");
+        Console.WriteLine("| Nom             | Prénom          | Catégorie |");
+        for(int i = 0; i < passagersList.Count; i ++)
+        {
+            Console.WriteLine($"| {passagersList[i].nom.PadRight(15)} | {passagersList[i].prenom.PadRight(15)} | {passagersList[i].codeCategorie.PadRight(9)} |");
+        }
+        Console.WriteLine("|_______________________________________________|");
+        Console.WriteLine();
+
+        //saisie du passager en cours
+        if(passagersList.Count == 0) //si le nombre de passagers dans la liste est égal à zéro, il faut d'abord saisir un passager humain
+        {
+            Console.Write("Saisissez le nom du passager : ");
+            nom = Console.ReadLine();
+            Console.Write("Saisissez le prénom du passager : ");
+            prenom = Console.ReadLine();
+            Console.Write("Saisissez l'age du passager : ");
+            age = int.Parse(Console.ReadLine());
+
+            //appliquer la catégorie au passager en fonction de son age
+            if(age < 4)
+            {
+                codeCat = "bebe";
+            }
+            else if(age >= 4 && age < 18)
+            {
+                codeCat = "enf417";
+            }
+            else if(age >= 18  && age <= 25)
+            {
+                codeCat = "jeu1825";
+            }
+            else if(age > 25)
+            {
+                codeCat = "adu26p";
+            } 
+        }
+        else //une fois au moins un passager humain enregistré, on peut saisir des passagers animaux ou humains
+        {
+            if(ConfirmYN("Le passager est un animal de compagnie [y/n] ? ") == 1)
+            {
+                Console.Write("Saisissez le nom de l'animal : ");
+                prenom = Console.ReadLine();
+                nom = "Animal";
+                codeCat = "ancomp";
+            }
+            else
+            {
+                Console.Write("Saisissez le nom du passager : ");
+                nom = Console.ReadLine();
+                Console.Write("Saisissez le prénom du passager : ");
+                prenom = Console.ReadLine();
+                Console.Write("Saisissez l'age du passager : ");
+                age = int.Parse(Console.ReadLine());
+
+                //appliquer la catégorie au passager en fonction de son age
+                if(age < 4)
+                {
+                    codeCat = "bebe";
+                }
+                else if(age >= 4 && age < 18)
+                {
+                    codeCat = "enf417";
+                }
+                else if(age >= 18  && age <= 25)
+                {
+                    codeCat = "jeu1825";
+                }
+                else if(age > 25)
+                {
+                    codeCat = "adu26p";
+                } 
+            }
+        }
+        Passager passager = new Passager(nom, prenom, codeCat);
+        return passager;
+    }
+    static void CreerVehicule(ref Dictionary <string,string> catVehicules, ref List <Vehicule> vehicules)
+    {
+        //boucle
+        bool vehiculesFinis = false;
+        while(!vehiculesFinis)
+        {
+            //affichage
+            int i = 0;
+            Console.Clear();
+            Console.WriteLine("Ajout de véhicule(s) : ");
+            Console.WriteLine();
+            Console.WriteLine(" ___________________________________________________________________ ");
+            Console.WriteLine("| Catégorie | Description                                  | Nombre |");
+            foreach (Vehicule vehicule in vehicules)
+            {
+                i ++;
+                Console.WriteLine($"| {i.ToString().PadRight(9)} | {catVehicules[vehicule.codeCategorie].PadRight(44)} | {vehicule.quantite.ToString().PadRight(6)} |");
+            }
+            Console.WriteLine("|___________________________________________________________________|");
+            Console.WriteLine();
+
+            //saisie
+            string questionVehic = "Tappez la catégorie à ajouter, ou tappez x pour confirmer : ";
+            string[]choixPossiblesVehic = new string[13] {"1","2","3","4","5","6","7","8","9","10","11","x","X"};
+            int choixVehicule = VerifSaisieString(choixPossiblesVehic, questionVehic);
+
+            if(choixVehicule == 12 || choixVehicule == 13) //si l'utilisateur tappe x ou X
+            {
+                vehiculesFinis = true; //on sort de la boucle d'ajout des véhicules
+            }
+            else
+            {
+                //on incrémente la catégorie sélectionnée
+                int compte = vehicules[choixVehicule -1].quantite;  //on récupère la quantité de la catégorie sélectionnée
+                compte ++;                                          //on l'incrémente
+                vehicules[choixVehicule -1] = new Vehicule(vehicules[choixVehicule -1].codeCategorie,compte); //on remplace le véhicule sélectionné par un nouveau véhicule
+                //de même codeCatégorie, avec la quantité qui vient d'être incrémentée
+            }
+        }
     }
     static void Main()
     {
@@ -320,25 +761,19 @@ class SAE11
         bool menu = true;
         bool isLogoMenu = false;
         int choix = 0; 
-        int choixAffichageLigne, choixAffichageTarif, i;
+        int choixAffichageLigne, choixAffichageTarif;
         Dictionary <int,string> itineraires = new Dictionary<int, string>(); //dictionnaire qui stocke les itinéraires
         List <string> logoMenu = new List<string>();
         Dictionary <char,string> charTable = new Dictionary<char,string>();
         Dictionary <string,string> bateauTable = new Dictionary<string, string>();
 
-        //création et chargement des dictionnaires horaires et tarifs
+        //création et chargement des dictionnaires horaires, tarifs et catVéhicules
         Dictionary <int,Dictionary<int,Journee>> horairesComplets = new Dictionary<int,Dictionary<int,Journee>>(); //dictionnaire qui stocke tous les horaires pour tous les itinéraires
         Dictionary <int,Dictionary<string,Tarif>> tarifsComplets = new Dictionary<int,Dictionary<string,Tarif>>();
         ChargementDicoHoraires(ref horairesComplets);
         ChargementDicoTarifs(ref tarifsComplets);
-
-        //déclarations choix user réservation
-        bool confirmChoixResaLigne = false;
-        string verifChoixResaLigne;
-        int choixResaLigne = 1;
-
-        int choixResaDate;
-        string choixResaHeure;
+        Dictionary <string, string> catVehicules = new Dictionary<string, string>();
+        ChargementDicoCatVehicules(ref catVehicules);
 
         //dictionaire charTable
         charTable.Add('L',"lundi");
@@ -405,7 +840,7 @@ class SAE11
                         //choix utilisateur
                         string questionChoixLigne ="De quelle ligne souhaitez-vous afficher les horaires ? ";
                         char[]choixPossiblesLigne = new char[4] {'1','2','3','4'};
-                        choixAffichageLigne = VerifSaisie(choixPossiblesLigne, questionChoixLigne);
+                        choixAffichageLigne = VerifSaisieChar(choixPossiblesLigne, questionChoixLigne);
                         
                         //affichage horaire
                         Console.Clear();
@@ -423,7 +858,7 @@ class SAE11
                         //choix utilisateur
                         string questionAffichageTarif ="De quelle ligne souhaitez-vous afficher les tarifs ? ";
                         char[]choixPossiblesAffichageTarif = new char[4] {'1','2','3','4'};
-                        choixAffichageTarif = VerifSaisie(choixPossiblesAffichageTarif, questionAffichageTarif);
+                        choixAffichageTarif = VerifSaisieChar(choixPossiblesAffichageTarif, questionAffichageTarif);
 
                         //affichage tarifs
                         Console.Clear();
@@ -436,6 +871,10 @@ class SAE11
                 case 4:
                     {
                         Console.Clear();
+
+                        CreerResa(itineraires, ref horairesComplets, ref charTable, catVehicules);
+                        
+
                         retourMenu();
                         break;
                     }
