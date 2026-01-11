@@ -515,7 +515,7 @@ class SAE11
         if(ConfirmYN("Confirmer [y/n] ? ") == 1)
         {
             Console.WriteLine("Réservation confirmée.");
-            horodatage = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"); //HH pour avoir l'heure en format 24, MM pour mois, mm pour minutes
+            horodatage = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); //HH pour avoir l'heure en format 24, MM pour mois, mm pour minutes
             Console.WriteLine();
             Console.WriteLine("Appuyez sur une touche pour l'enregistrement des passagers.");
             Console.ReadKey();
@@ -580,9 +580,13 @@ class SAE11
             Console.Clear();
             Console.WriteLine("Récapitulatif de votre réservation");
             Console.WriteLine();
+
+            //trajet
             Console.WriteLine("TRAJET :");
             Console.WriteLine($"Réservation pour la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
             Console.WriteLine();
+
+            //passagers
             Console.WriteLine("PASSAGER(S) :");
             Console.WriteLine(" _______________________________________________ ");
             Console.WriteLine("| Nom             | Prénom          | Catégorie |");
@@ -592,16 +596,21 @@ class SAE11
             }
             Console.WriteLine("|_______________________________________________|");
             Console.WriteLine();
-            Console.WriteLine("VEHICULE(S) :");
-            Console.WriteLine(" _______________________________________________________ ");
-            Console.WriteLine("| Description                                  | Nombre |");
-            foreach (Vehicule vehicule in vehicules)
+
+            //véhicules si il y en a
+            if(vehicules.Count != 0)
             {
-                Console.WriteLine($"| {catVehicules[vehicule.codeCategorie].PadRight(44)} | {vehicule.quantite.ToString().PadRight(6)} |");
+                Console.WriteLine("VEHICULE(S) :");
+                Console.WriteLine(" _______________________________________________________ ");
+                Console.WriteLine("| Description                                  | Nombre |");
+                foreach (Vehicule vehicule in vehicules)
+                {
+                    Console.WriteLine($"| {catVehicules[vehicule.codeCategorie].PadRight(44)} | {vehicule.quantite.ToString().PadRight(6)} |");
+                }
+                Console.WriteLine("|_______________________________________________________|");
+                Console.WriteLine();
             }
-            Console.WriteLine("|_______________________________________________________|");
-            Console.WriteLine();
-            
+
             if(ConfirmYN("Confirmez la réservation [y/n] ? ") == 1)
             {
                 retour = 1;
@@ -613,11 +622,11 @@ class SAE11
             }
 
             //donner le nom du premier passager à la réservation
-            string nomResa = "Groupe " + passagers[0].nom;
+            string nomResa = "Groupe_" + passagers[0].nom;
 
             //créer la structure réservation
             Reservation reservation = new Reservation(nomResa, choixLigne, choixJourString, choixHoraireString, horodatage, passagers, vehicules);
-
+            ExportJson(reservation);
         }
         else
         {
@@ -628,7 +637,66 @@ class SAE11
     }
     static void ExportJson(Reservation resa)
     {
-        
+        //déclarations
+
+        //création du fichier JSON
+        string chemin = "../exports/"+ resa.nom + "_" + resa.horodatage + ".json";
+        if(!File.Exists(chemin))
+        {
+            StreamWriter sw = new StreamWriter($"../exports/"+ resa.nom + "_" + resa.horodatage + ".json");
+            sw.WriteLine("[");
+            sw.WriteLine("  {");
+            sw.WriteLine("      \"reservation\": {");
+            sw.WriteLine($"         \"nom\": \"{resa.nom}\",");
+            sw.WriteLine($"         \"idLiaison\": {resa.idLiaison},");
+            sw.WriteLine($"         \"date\": \"{resa.date}\",");
+            sw.WriteLine($"         \"heure\": \"{resa.heure}\",");
+            sw.WriteLine($"         \"horodatage\": \"{resa.horodatage}\"");
+            sw.WriteLine("          },");
+            sw.WriteLine("      \"passagers\": [");
+            for(int i = 0; i < resa.passagers.Count -1; i++)
+            {
+                sw.WriteLine("      {");
+                sw.WriteLine($"             \"nom\": \"{resa.passagers[i].nom}\",");
+                sw.WriteLine($"             \"prenom\": \"{resa.passagers[i].prenom}\",");
+                sw.WriteLine($"             \"codeCategorie\": \"{resa.passagers[i].codeCategorie}\"");
+                sw.WriteLine("      },");
+            }
+            //pour le dernier passager et éviter la virgule en trop
+            sw.WriteLine("      {");
+            sw.WriteLine($"             \"nom\": \"{resa.passagers[resa.passagers.Count -1].nom}\",");
+            sw.WriteLine($"             \"prenom\": \"{resa.passagers[resa.passagers.Count -1].prenom}\",");
+            sw.WriteLine($"             \"codeCategorie\": \"{resa.passagers[resa.passagers.Count -1].codeCategorie}\"");
+            sw.WriteLine("      }");
+            sw.WriteLine("     ],");
+
+            sw.WriteLine("      \"vehicules\": [");
+            if(resa.vehicules.Count !=0)
+            {
+                for(int i = 0; i < resa.vehicules.Count -1; i++)
+                {
+                    sw.WriteLine("      {");
+                    sw.WriteLine($"             \"codeCategorie\": \"{resa.vehicules[i].codeCategorie}\",");
+                    sw.WriteLine($"             \"quantite\": {resa.vehicules[i].quantite}");
+                    sw.WriteLine("      },");
+                }
+
+                //pour le dernier véhicule et éviter la virgule de trop
+                sw.WriteLine("      {");
+                sw.WriteLine($"             \"codeCategorie\": \"{resa.vehicules[resa.vehicules.Count -1].codeCategorie}\",");
+                sw.WriteLine($"             \"quantite\": {resa.vehicules[resa.vehicules.Count -1].quantite}");
+                sw.WriteLine("      }");
+
+            }
+            sw.WriteLine("     ]");
+            sw.WriteLine("  }");
+            sw.WriteLine("]");
+            sw.Close();
+        }
+        else
+        {
+            
+        }
     }
     static Passager CreerPassager(ref List <Passager> passagersList)
     {
