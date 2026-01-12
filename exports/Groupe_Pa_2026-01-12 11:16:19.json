@@ -1,0 +1,33 @@
+[
+  {
+      "reservation": {
+         "nom": "Groupe_Pa",
+         "idLiaison": 1,
+         "date": "2025-11-01",
+         "heure": "09:45",
+         "horodatage": "2026-01-12 11:16:19"
+          },
+      "passagers": [
+      {
+             "nom": "Pa",
+             "prenom": "Ro",
+             "codeCategorie": "adu26p"
+      },
+      {
+             "nom": "Animal",
+             "prenom": "SDLC",
+             "codeCategorie": "ancomp"
+      }
+     ],
+      "vehicules": [
+      {
+             "codeCategorie": "velo",
+             "quantite": 1
+      },
+      {
+             "codeCategorie": "cat1",
+             "quantite": 1
+      }
+     ]
+  }
+]

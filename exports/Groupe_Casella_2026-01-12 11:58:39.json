@@ -1,0 +1,42 @@
+[
+  {
+      "reservation": {
+         "nom": "Groupe_Casella",
+         "idLiaison": 1,
+         "date": "2025-11-01",
+         "heure": "09:45",
+         "horodatage": "2026-01-12 11:58:39"
+          },
+      "passagers": [
+      {
+             "nom": "Casella",
+             "prenom": "Louis",
+             "codeCategorie": "jeu1825"
+      },
+      {
+             "nom": "Animal",
+             "prenom": "SDLC",
+             "codeCategorie": "ancomp"
+      },
+      {
+             "nom": "Pampagnin",
+             "prenom": "Romain",
+             "codeCategorie": "adu26p"
+      }
+     ],
+      "vehicules": [
+      {
+             "codeCategorie": "trot",
+             "quantite": 1
+      },
+      {
+             "codeCategorie": "velo",
+             "quantite": 1
+      },
+      {
+             "codeCategorie": "cat1",
+             "quantite": 1
+      }
+     ]
+  }
+]

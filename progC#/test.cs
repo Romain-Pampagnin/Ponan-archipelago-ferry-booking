@@ -265,7 +265,7 @@ class SAE11
         Console.WriteLine();
         return retour;
     }
-   static int VerifSaisieChar(char[] choixPossibles, string question) //retourne forcément l'indice du char saisi (indice en fonction de la liste fournie)
+    static int VerifSaisieChar(char[] choixPossibles, string question) //retourne forcément l'indice du char saisi (indice en fonction de la liste fournie)
     {
         //déclarations
         int sortie = -1;
@@ -428,10 +428,10 @@ class SAE11
             Console.WriteLine("Erreur: fichier catVehicules.csv manquant.");
         }
     }
-    static int CreerResa(Dictionary <int,string> itineraires, ref Dictionary<int,Dictionary<int,Journee>> horairesComplets, ref Dictionary<char,string> charTable, Dictionary<string,string> catVehicules)
+    static int CreerResa(Dictionary <int,string> itineraires, ref Dictionary<int,Dictionary<int,Journee>> horairesComplets, ref Dictionary<char,string> charTable, Dictionary<string,string> catVehicules, ref Dictionary <int,Dictionary<string,Tarif>> tarifsComplets)
     {
         //déclarations
-        int choixLigne, choixJour;
+        int choixLigne, choixJour, choixLigneRetour, choixJourRetour;
         int retour = 0;
         string horodatage;
         List <Passager> passagers = new List<Passager>();
@@ -444,14 +444,35 @@ class SAE11
             vehicules.Add(nouveauVehicule);
         }
         
+        TitreEncadre("EFFECTUER UNE RESERVATION");
         affichageLignes(itineraires);
         Console.WriteLine();
         string questionChoix1 = "Choissisez le numéro de la ligne sur laquelle vous voulez réserver : ";
         char[]choixPossiblesQ1 = new char[4] {'1','2','3','4'};
         choixLigne = VerifSaisieChar(choixPossiblesQ1, questionChoix1);
+        
+        //sélection automatique de la ligne retour
+        choixLigneRetour = 0;
+        if(choixLigne == 1)
+        {
+            choixLigneRetour = 2;
+        }
+        else if(choixLigne == 2)
+        {
+            choixLigneRetour = 1;
+        }
+        else if(choixLigne == 3)
+        {
+            choixLigneRetour = 4;
+        }
+        else if(choixLigne == 4)
+        {
+            choixLigneRetour = 3;
+        }
 
         //afficher la ligne sélectionnée et ses horaires
         Console.Clear();
+        TitreEncadre("EFFECTUER UNE RESERVATION");
         Console.WriteLine($"Ligne {itineraires[choixLigne]} :");
         Console.WriteLine();
         affichageHorairesItineraire(choixLigne, ref horairesComplets, ref charTable);
@@ -474,6 +495,7 @@ class SAE11
 
         //afficher la ligne et le jour choisi pour choix horaire
         Console.Clear();
+        TitreEncadre("EFFECTUER UNE RESERVATION");
         Console.WriteLine($"Ligne {itineraires[choixLigne]} :");
         Console.WriteLine();
         Console.WriteLine($"Journée du {choixJour}/11 :");
@@ -510,6 +532,7 @@ class SAE11
         
         //confirmation choix traversée date heure
         Console.Clear();
+        TitreEncadre("EFFECTUER UNE RESERVATION");
         Console.WriteLine($"Vous avez choisi un trajet sur la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
         Console.WriteLine();
         if(ConfirmYN("Confirmer [y/n] ? ") == 1)
@@ -521,11 +544,11 @@ class SAE11
             Console.ReadKey();
             
             Console.Clear();
+            TitreEncadre("EFFECTUER UNE RESERVATION");
             Console.WriteLine($"Réservation pour la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
             Console.WriteLine();
 
             //enregistrement des passagers
-            Console.WriteLine("Passager 1 : ");
             passagers.Add(CreerPassager(ref passagers));
             Console.WriteLine();
 
@@ -546,6 +569,7 @@ class SAE11
 
             //récapitulatif des passagers saisis
             Console.Clear();
+            TitreEncadre("EFFECTUER UNE RESERVATION");
             Console.WriteLine($"Réservation pour la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
             Console.WriteLine($"Vous avez saisi {passagers.Count} passager(s) :");
             Console.WriteLine(" _______________________________________________ ");
@@ -576,44 +600,127 @@ class SAE11
                 }
             }
 
-            //récapitulatif total
             Console.Clear();
-            Console.WriteLine("Récapitulatif de votre réservation");
+            TitreEncadre("EFFECTUER UNE RESERVATION");
+            Console.WriteLine("Récapitulatif de votre réservation (aller simple)");
             Console.WriteLine();
-
-            //trajet
-            Console.WriteLine("TRAJET :");
-            Console.WriteLine($"Réservation pour la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
-            Console.WriteLine();
-
-            //passagers
-            Console.WriteLine("PASSAGER(S) :");
-            Console.WriteLine(" _______________________________________________ ");
-            Console.WriteLine("| Nom             | Prénom          | Catégorie |");
-            for(int i = 0; i < passagers.Count; i ++)
-            {
-                Console.WriteLine($"| {passagers[i].nom.PadRight(15)} | {passagers[i].prenom.PadRight(15)} | {passagers[i].codeCategorie.PadRight(9)} |");
-            }
-            Console.WriteLine("|_______________________________________________|");
-            Console.WriteLine();
-
-            //véhicules si il y en a
-            if(vehicules.Count != 0)
-            {
-                Console.WriteLine("VEHICULE(S) :");
-                Console.WriteLine(" _______________________________________________________ ");
-                Console.WriteLine("| Description                                  | Nombre |");
-                foreach (Vehicule vehicule in vehicules)
-                {
-                    Console.WriteLine($"| {catVehicules[vehicule.codeCategorie].PadRight(44)} | {vehicule.quantite.ToString().PadRight(6)} |");
-                }
-                Console.WriteLine("|_______________________________________________________|");
-                Console.WriteLine();
-            }
+            AffichageRecapitulatifTraversee(itineraires, choixLigne, choixJour, choixHoraireString, passagers, vehicules, catVehicules, ref tarifsComplets);
 
             if(ConfirmYN("Confirmez la réservation [y/n] ? ") == 1)
             {
                 retour = 1;
+                Console.WriteLine("Réservation confirmée, ");
+                Console.WriteLine();
+
+                //demander pour réservation retour
+                if(ConfirmYN("Souhaitez-vous réserver un voyage retour avec les mêmes paramêtres [y/n] ? ") == 1)
+                {
+                    
+                    //saisie date et horaire par l'utilisateur
+                    Console.Clear();
+                    TitreEncadre("EFFECTUER UNE RESERVATION (retour)");
+                    Console.WriteLine($"Ligne {itineraires[choixLigneRetour]} :");
+                    Console.WriteLine();
+                    affichageHorairesItineraire(choixLigneRetour, ref horairesComplets, ref charTable);
+                    Console.WriteLine();
+
+                    //création du tableau des réponses valides en prenant en compte le fait que la date de retour ne peut pas être inféreure ou égale à la date de l'aller
+                    string questionChoix4 = "Choisissez le numéro du jour de votre traversée retour : ";
+
+                    List <string> listeChoixRetour = new List<string>(); //je passe par une liste
+                    for(int i = choixJour +1; i <= 30; i++ )
+                    {
+                        listeChoixRetour.Add(i.ToString()); //à laquelle j'ajoute les string une par une
+                    }
+                    string[]choixPossiblesQ4 = listeChoixRetour.ToArray();    //je crée un tableau de string à partir de ma liste de string (peu élégant)
+                    choixJourRetour = VerifSaisieString(choixPossiblesQ4, questionChoix4);
+                    choixJourRetour = choixJourRetour + choixJour;              //incrémente le résultat pour que l'entier soit égal à la valeur inscrite en chaîne 
+
+                    //basculer le jour vers un string
+                    string choixJourRetourString;
+                    if(choixJourRetour < 10)
+                    {
+                        choixJourRetourString = "2025-11-0" + choixJourRetour.ToString();
+                    }
+                    else
+                    {
+                        choixJourRetourString = "2025-11-" + choixJourRetour.ToString();
+                    }
+
+                    //afficher la ligne et le jour choisi pour choix horaire
+                    Console.Clear();
+                    TitreEncadre("EFFECTUER UNE RESERVATION (retour)");
+                    Console.WriteLine($"Ligne {itineraires[choixLigneRetour]} :");
+                    Console.WriteLine();
+                    Console.WriteLine($"Journée du {choixJourRetour}/11 :");
+                    Console.WriteLine();
+                    int numJourRetour = 0;
+                    
+                    //choix de l'horaire
+                    foreach(KeyValuePair <string,string> heure in horairesComplets[choixLigneRetour][choixJourRetour].horaires)
+                    {
+                        numJourRetour ++;
+                        Console.WriteLine($"    > {numJourRetour} : {heure.Key}");
+                    }
+                    Console.WriteLine();
+                    
+                    string questionChoix5 = "Choissisez l'horaire de votre trajet : ";
+                    char[]choixPossiblesQ5 = new char[numJourRetour];
+                    for (int i = 0; i < numJourRetour; i++)
+                    {
+                        choixPossiblesQ5[i] = (char)('0' + i + 1);
+                    }
+                    int choixHoraireRetour = VerifSaisieChar(choixPossiblesQ5, questionChoix5);
+
+                    //récupération de l'horaire sous format string
+                    string choixHoraireRetourString = "";
+                    int z = 1;
+                    foreach (string cle in horairesComplets[choixLigneRetour][choixJourRetour].horaires.Keys)
+                    {
+                        if(z == choixHoraireRetour)
+                        {
+                            choixHoraireRetourString = cle;
+                        }
+                        z++;
+                    }
+
+                    Console.Clear();
+                    TitreEncadre("EFFECTUER UNE RESERVATION");
+                    Console.WriteLine("Récapitulatif de votre réservation (aller-retour)");
+                    Console.WriteLine();
+                    Console.WriteLine("Aller :");
+                    AffichageRecapitulatifTraversee(itineraires, choixLigne, choixJour, choixHoraireString, passagers, vehicules, catVehicules, ref tarifsComplets);
+                    Console.WriteLine("Retour :");
+                    AffichageRecapitulatifTraversee(itineraires, choixLigneRetour, choixJourRetour, choixHoraireRetourString, passagers, vehicules, catVehicules, ref tarifsComplets);
+
+                    //création des deux réservations
+                    string nomResa = "Groupe_" + passagers[0].nom;
+                    string nomResaRetour = "Groupe_" + passagers[0].nom + "_Retour";
+
+                    Reservation reservationAller = new Reservation(nomResa, choixLigne, choixJourString, choixHoraireString, horodatage, passagers, vehicules);
+                    Reservation reservationRetour = new Reservation(nomResaRetour, choixLigneRetour, choixJourRetourString, choixHoraireRetourString, horodatage, passagers, vehicules);
+
+                    //export dans un seul JSON
+                    List<Reservation> listeAR = new List<Reservation>();
+                    listeAR.Add(reservationAller);
+                    listeAR.Add(reservationRetour);
+                    ExportJson(listeAR);
+                }
+                else
+                {
+                    //donner le nom du premier passager à la réservation
+                    string nomResa = "Groupe_" + passagers[0].nom;
+
+                    //créer la structure réservation
+                    Reservation reservation = new Reservation(nomResa, choixLigne, choixJourString, choixHoraireString, horodatage, passagers, vehicules);
+                    List <Reservation> listeAllerSimple = new List<Reservation>();
+                    listeAllerSimple.Add(reservation);
+                    ExportJson(listeAllerSimple);
+                }
+
+                Console.WriteLine("Merci pour votre commande, la CAN vous souhaite d'excellentes traversées sur nos lignes.");
+                Console.WriteLine();
+
             }
             else
             {
@@ -621,12 +728,7 @@ class SAE11
                 Console.WriteLine();
             }
 
-            //donner le nom du premier passager à la réservation
-            string nomResa = "Groupe_" + passagers[0].nom;
-
-            //créer la structure réservation
-            Reservation reservation = new Reservation(nomResa, choixLigne, choixJourString, choixHoraireString, horodatage, passagers, vehicules);
-            ExportJson(reservation);
+            
         }
         else
         {
@@ -635,61 +737,116 @@ class SAE11
         }
         return retour;
     }
-    static void ExportJson(Reservation resa)
+    static void AffichageRecapitulatifTraversee(Dictionary <int,string> itineraires, int choixLigne, int choixJour, string choixHoraireString, List<Passager> passagers, List<Vehicule> vehicules,Dictionary<string,string> catVehicules, ref Dictionary <int,Dictionary<string,Tarif>> tarifsComplets)
     {
         //déclarations
+        float totalPrixPassagers, totalPrixVehicules;
+
+        //récapitulatif total
+        //trajet
+        Console.WriteLine("TRAJET :");
+        Console.WriteLine($"Réservation pour la ligne {itineraires[choixLigne]}, le {choixJour}/11 à {choixHoraireString}.");
+        Console.WriteLine();
+
+        //passagers
+        totalPrixPassagers = 0;
+        totalPrixVehicules = 0;
+        Console.WriteLine("PASSAGER(S) :");
+        Console.WriteLine(" __________________________________________________________ ");
+        Console.WriteLine("| Nom             | Prénom          | Catégorie | Prix     |");
+        for(int i = 0; i < passagers.Count; i ++)
+        {
+            Console.WriteLine($"| {passagers[i].nom.PadRight(15)} | {passagers[i].prenom.PadRight(15)} | {passagers[i].codeCategorie.PadRight(9)} | {tarifsComplets[choixLigne][passagers[i].codeCategorie].tarifCategorie.ToString().PadRight(8)} |");
+            totalPrixPassagers = totalPrixPassagers + tarifsComplets[choixLigne][passagers[i].codeCategorie].tarifCategorie;
+        }
+        Console.WriteLine("|__________________________________________________________|");
+        Console.WriteLine($"Sous-total passagers : {totalPrixPassagers} €");
+        Console.WriteLine();
+
+        //véhicules si il y en a
+        if(vehicules.Count != 0)
+        {
+            Console.WriteLine("VEHICULE(S) :");
+            Console.WriteLine(" _______________________________________________________________________________________ ");
+            Console.WriteLine("| Description                                  | Nombre | Prix unitaire | Prix total    |");
+            foreach (Vehicule vehicule in vehicules)
+            {
+                Console.WriteLine($"| {catVehicules[vehicule.codeCategorie].PadRight(44)} | {vehicule.quantite.ToString().PadRight(6)} | {tarifsComplets[choixLigne][vehicule.codeCategorie].tarifCategorie.ToString().PadRight(13)} | {(vehicule.quantite * tarifsComplets[choixLigne][vehicule.codeCategorie].tarifCategorie).ToString().PadRight(13)} |");
+                totalPrixVehicules = totalPrixVehicules + vehicule.quantite * tarifsComplets[choixLigne][vehicule.codeCategorie].tarifCategorie;
+            }
+            Console.WriteLine("|_______________________________________________________________________________________|");
+            Console.WriteLine($"Sous-total véhicules : {totalPrixVehicules} €");
+            Console.WriteLine();
+            Console.WriteLine($"Total : {totalPrixPassagers + totalPrixVehicules} €");
+            Console.WriteLine();
+        }
+    }
+    static void ExportJson(List<Reservation> listeResas)
+    {
+        //déclarations
+        int nbResa = 0;
 
         //création du fichier JSON
-        string chemin = "../exports/"+ resa.nom + "_" + resa.horodatage + ".json";
+        string chemin = "../exports/"+ listeResas[0].nom + "_" + listeResas[0].horodatage + ".json";
         if(!File.Exists(chemin))
         {
-            StreamWriter sw = new StreamWriter($"../exports/"+ resa.nom + "_" + resa.horodatage + ".json");
+            StreamWriter sw = new StreamWriter($"../exports/"+ listeResas[0].nom + "_" + listeResas[0].horodatage + ".json");
             sw.WriteLine("[");
-            sw.WriteLine("  {");
-            sw.WriteLine("      \"reservation\": {");
-            sw.WriteLine($"         \"nom\": \"{resa.nom}\",");
-            sw.WriteLine($"         \"idLiaison\": {resa.idLiaison},");
-            sw.WriteLine($"         \"date\": \"{resa.date}\",");
-            sw.WriteLine($"         \"heure\": \"{resa.heure}\",");
-            sw.WriteLine($"         \"horodatage\": \"{resa.horodatage}\"");
-            sw.WriteLine("          },");
-            sw.WriteLine("      \"passagers\": [");
-            for(int i = 0; i < resa.passagers.Count -1; i++)
+            foreach(Reservation resa in listeResas)
             {
-                sw.WriteLine("      {");
-                sw.WriteLine($"             \"nom\": \"{resa.passagers[i].nom}\",");
-                sw.WriteLine($"             \"prenom\": \"{resa.passagers[i].prenom}\",");
-                sw.WriteLine($"             \"codeCategorie\": \"{resa.passagers[i].codeCategorie}\"");
-                sw.WriteLine("      },");
-            }
-            //pour le dernier passager et éviter la virgule en trop
-            sw.WriteLine("      {");
-            sw.WriteLine($"             \"nom\": \"{resa.passagers[resa.passagers.Count -1].nom}\",");
-            sw.WriteLine($"             \"prenom\": \"{resa.passagers[resa.passagers.Count -1].prenom}\",");
-            sw.WriteLine($"             \"codeCategorie\": \"{resa.passagers[resa.passagers.Count -1].codeCategorie}\"");
-            sw.WriteLine("      }");
-            sw.WriteLine("     ],");
-
-            sw.WriteLine("      \"vehicules\": [");
-            if(resa.vehicules.Count !=0)
-            {
-                for(int i = 0; i < resa.vehicules.Count -1; i++)
+                nbResa++;
+                
+                sw.WriteLine("  {");
+                sw.WriteLine("      \"reservation\": {");
+                sw.WriteLine($"         \"nom\": \"{resa.nom}\",");
+                sw.WriteLine($"         \"idLiaison\": {resa.idLiaison},");
+                sw.WriteLine($"         \"date\": \"{resa.date}\",");
+                sw.WriteLine($"         \"heure\": \"{resa.heure}\",");
+                sw.WriteLine($"         \"horodatage\": \"{resa.horodatage}\"");
+                sw.WriteLine("          },");
+                sw.WriteLine("      \"passagers\": [");
+                for(int i = 0; i < resa.passagers.Count -1; i++)
                 {
                     sw.WriteLine("      {");
-                    sw.WriteLine($"             \"codeCategorie\": \"{resa.vehicules[i].codeCategorie}\",");
-                    sw.WriteLine($"             \"quantite\": {resa.vehicules[i].quantite}");
+                    sw.WriteLine($"             \"nom\": \"{resa.passagers[i].nom}\",");
+                    sw.WriteLine($"             \"prenom\": \"{resa.passagers[i].prenom}\",");
+                    sw.WriteLine($"             \"codeCategorie\": \"{resa.passagers[i].codeCategorie}\"");
                     sw.WriteLine("      },");
                 }
-
-                //pour le dernier véhicule et éviter la virgule de trop
+                //pour le dernier passager et éviter la virgule en trop
                 sw.WriteLine("      {");
-                sw.WriteLine($"             \"codeCategorie\": \"{resa.vehicules[resa.vehicules.Count -1].codeCategorie}\",");
-                sw.WriteLine($"             \"quantite\": {resa.vehicules[resa.vehicules.Count -1].quantite}");
+                sw.WriteLine($"             \"nom\": \"{resa.passagers[resa.passagers.Count -1].nom}\",");
+                sw.WriteLine($"             \"prenom\": \"{resa.passagers[resa.passagers.Count -1].prenom}\",");
+                sw.WriteLine($"             \"codeCategorie\": \"{resa.passagers[resa.passagers.Count -1].codeCategorie}\"");
                 sw.WriteLine("      }");
+                sw.WriteLine("     ],");
 
+                sw.WriteLine("      \"vehicules\": [");
+                if(resa.vehicules.Count !=0)
+                {
+                    for(int i = 0; i < resa.vehicules.Count -1; i++)
+                    {
+                        sw.WriteLine("      {");
+                        sw.WriteLine($"             \"codeCategorie\": \"{resa.vehicules[i].codeCategorie}\",");
+                        sw.WriteLine($"             \"quantite\": {resa.vehicules[i].quantite}");
+                        sw.WriteLine("      },");
+                    }
+
+                    //pour le dernier véhicule et éviter la virgule de trop
+                    sw.WriteLine("      {");
+                    sw.WriteLine($"             \"codeCategorie\": \"{resa.vehicules[resa.vehicules.Count -1].codeCategorie}\",");
+                    sw.WriteLine($"             \"quantite\": {resa.vehicules[resa.vehicules.Count -1].quantite}");
+                    sw.WriteLine("      }");
+
+                }
+                sw.WriteLine("     ]");
+                sw.WriteLine("  }");
+                
+                if(nbResa < listeResas.Count)
+                {
+                    sw.WriteLine(",");
+                } 
             }
-            sw.WriteLine("     ]");
-            sw.WriteLine("  }");
             sw.WriteLine("]");
             sw.Close();
         }
@@ -704,8 +861,11 @@ class SAE11
         string nom, prenom;
         string codeCat = "";
         int age;
+        int numPassager = passagersList.Count +1;
 
         //affichage des passagers déjà saisis
+        Console.Clear();
+        TitreEncadre("EFFECTUER UNE RESERVATION");
         Console.WriteLine(" _______________________________________________ ");
         Console.WriteLine("| Nom             | Prénom          | Catégorie |");
         for(int i = 0; i < passagersList.Count; i ++)
@@ -716,6 +876,7 @@ class SAE11
         Console.WriteLine();
 
         //saisie du passager en cours
+        Console.WriteLine($"Passager {numPassager} :");
         if(passagersList.Count == 0) //si le nombre de passagers dans la liste est égal à zéro, il faut d'abord saisir un passager humain
         {
             Console.Write("Saisissez le nom du passager : ");
@@ -792,6 +953,7 @@ class SAE11
             //affichage
             int i = 0;
             Console.Clear();
+            TitreEncadre("EFFECTUER UNE RESERVATION");
             Console.WriteLine("Ajout de véhicule(s) : ");
             Console.WriteLine();
             Console.WriteLine(" ___________________________________________________________________ ");
@@ -822,6 +984,30 @@ class SAE11
                 //de même codeCatégorie, avec la quantité qui vient d'être incrémentée
             }
         }
+    }
+    static void TitreEncadre(string phrase)
+    {
+        //déclarations
+        int longueur;
+
+        longueur = phrase.Length;
+
+        Console.Write(" ___");
+        for(int i = 0; i < longueur; i++)
+        {
+            Console.Write("_");
+        }
+        Console.Write("___ \n");
+        Console.Write("|   ");
+        Console.Write($"{phrase}");
+        Console.Write("   |\n");
+        Console.Write("|___");
+        for(int i = 0; i < longueur; i++)
+        {
+            Console.Write("_");
+        }
+        Console.Write("___|\n");
+        Console.WriteLine();
     }
     static void Main()
     {
@@ -896,6 +1082,7 @@ class SAE11
                 case 1:
                     {
                         Console.Clear();
+                        TitreEncadre("AFFICHAGE DES LIGNES");
                         affichageLignes(itineraires);
                         retourMenu();
                         break;
@@ -903,6 +1090,7 @@ class SAE11
                 case 2:
                     {
                         Console.Clear();
+                        TitreEncadre("AFFICHAGE DES HORAIRES");
                         affichageLignes(itineraires);
 
                         //choix utilisateur
@@ -912,6 +1100,7 @@ class SAE11
                         
                         //affichage horaire
                         Console.Clear();
+                        TitreEncadre("AFFICHAGE DES HORAIRES");
                         Console.WriteLine($"Ligne {itineraires[choixAffichageLigne]} :\n");
                         affichageHorairesItineraire(choixAffichageLigne, ref horairesComplets, ref charTable);
                         Console.WriteLine();
@@ -921,6 +1110,7 @@ class SAE11
                 case 3:
                     {
                         Console.Clear();
+                        TitreEncadre("AFFICHAGE DES TARIFS");
                         affichageLignes(itineraires);
 
                         //choix utilisateur
@@ -930,6 +1120,7 @@ class SAE11
 
                         //affichage tarifs
                         Console.Clear();
+                        TitreEncadre("AFFICHAGE DES TARIFS");
                         Console.WriteLine($"Ligne {itineraires[choixAffichageTarif]} :\n");
                         AffichageTarifs(choixAffichageTarif, tarifsComplets);
                         Console.WriteLine();
@@ -940,7 +1131,7 @@ class SAE11
                     {
                         Console.Clear();
 
-                        CreerResa(itineraires, ref horairesComplets, ref charTable, catVehicules);
+                        CreerResa(itineraires, ref horairesComplets, ref charTable, catVehicules, ref tarifsComplets);
                         
 
                         retourMenu();
