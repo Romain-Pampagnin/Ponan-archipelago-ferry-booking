@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes d'embarquement</title>
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+    <header class="top">
+        
+        <img src="img/logo.png" alt="Logo de la CAN">
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li class="current-menu"><a href="submitReservation.html">Voir une réservation</a></li> 
+                <li><a href="stats.html">Statistiques</a></li>
+                <li><a href="tableau.html">Tableau de bord</a></li>
+            </ul>
+        </nav>
+
+        <img src="img/logo-iut.png" alt="Logo de l'IUT Robert Schuman">
+
+    </header>
+
+
+    <main>
+
+        <div class="sideBar leftSideBar">
+                
+            <div class="button">
+                <button id="buttonPassager">Passagers</button>
+                <button id="buttonVehicule">Véhicules</button>
+            </div>
+
+        </div>
+        
+        <div class="carte">
+            
+            <button id="buttonPrecedent" class="buttonSwipe">◀️</button>
+
+            <section class="carteEmbarquement">
+
+                <div class="ColonneGauche">
+                    <article>
+                        <figure>
+                            <img src="img/logoPass.png" alt="Logo">			
+                        </figure>
+                    </article>
+        
+                    <article class="InfoTrajet">
+
+                            <p>Gare de départ <span id="depart"></span></p>
+
+                            <p>Gare d'arrivée <span id="arrivee"></span></p>
+
+                            <p>Date <span id="date"></span></p>
+
+                            <p>Heure départ <span id="heure"></span></p>
+
+                            <p>Bateau <span id="bateau"></span></p>
+
+                    </article>
+                </div>
+
+                <div class="ColonneDroite">
+                    
+                    <h1>Carte d'embarquement</h1>
+
+                    <article class="InfoReservation">
+                            
+                        <p>Réservation <span id="numReservation"></span></p>
+                        
+                        <p>Nom <span id="nomReservation"></span></p>
+
+                        <hr>
+
+                        <div id="infoPassagers">
+                            <p>Passager <img class="qrcode" src="img/qrcode.png"></p>
+                            
+                            <p>Nom <span id="nomPassager"></span></p>
+
+                            <p>Prénom <span id="prenomPassager"></span></p>
+
+                            <p>Catégorie <span id="catPassager"></span></p>
+                        
+                            <p>Prix <span id="prixPassager"></span></p>
+                        </div>
+
+                        <div id="infoVehicules">
+                            <p>Véhicule <img class="qrcode" src="img/qrcode.png"></p>
+                            
+                            <p>Catégorie <span id="catVehicule"></span></p>
+
+                            <p>Nombre <span id="nombreVehicule"></span></p>
+                        
+                            <p>Prix <span id="prixVehicule"></span></p>
+                        </div>
+
+                    </article>
+                    
+                </div>
+
+            </section>
+
+            <button id="buttonSuivant" class="buttonSwipe">▶️</button>
+
+        </div>
+
+        <div class="sideBar rightSideBar">
+            <article id="factureLink"></article>
+        </div>
+
+    </main>
+  
+    <footer class="bottom">
+        <p>© CASELLA Louis, PAMPAGNIN Romain, SOHRABI Aquila - 2025</p>
+    </footer>
+
+    <script src="js/reservation.js"></script>
+
+</body>
+</html>

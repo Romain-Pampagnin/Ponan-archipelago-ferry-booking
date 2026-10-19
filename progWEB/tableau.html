@@ -1,29 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord</title>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Tableau de Bord</title>
 </head>
+
 <body>
 
-    <header>
-        <img src="other/logo.png" alt="Logo">
-
-    </header>
+    <header class="top">
+        
+        <img src="img/logo.png" alt="Logo de la CAN">
 
         <nav>
             <ul>
                 <li><a href="index.html">Accueil</a></li>
-                <li><a href="boarding.html">Cartes d'embarquement</a></li>
-                <li><a href="facture.html">Facture</a></li>
-                <li class="current-menu"><a href="tableau.html">Tableau de bord</a></li>
+                <li><a href="submitReservation.html">Voir une réservation</a></li> 
                 <li><a href="stats.html">Statistiques</a></li>
+                <li class="current-menu"><a href="tableau.html">Tableau de bord</a></li>
             </ul>
         </nav>
 
-                
+        <img src="img/logo-iut.png" alt="Logo de l'IUT Robert Schuman">
 
-    <script src="script.js"></script>
+    </header>
+
+    <main>
+
+            <div class="sideBar leftSideBar">
+            </div>
+
+            <div class="tableauDeBord">
+                
+                <h1>Tableau de bord</h1>
+                <form>
+                    
+                    <label for="liaison">Choisir une liaison :</label>
+                    <select id="liaison" name="liaison">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    
+                    <label for="date">Choisir une date :</label>
+                    <input type="date" id="date" name="date">
+
+                    <button type="submit">Valider</button>
+
+                </form>
+
+                <section class="infos" id="infos">
+
+
+                </section>
+
+            </div>
+
+            <div class="sideBar rightSideBar">
+                <p>contenu droite</p>
+            </div>
+
+    </main>
+  
+    <footer class="bottom">
+        <p>© CASELLA Louis, PAMPAGNIN Romain, SOHRABI Aquila - 2025</p>
+    </footer>
+
+    <script src="js/tableau.js"></script>
+
 </body>
 </html>

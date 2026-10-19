@@ -1,29 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
     <title>Facture</title>
 </head>
 <body>
 
-    <header>
-        <img src="other/logo.png" alt="Logo">
-
-    </header>
+    <header class="top">
+        
+        <img src="img/logo.png" alt="Logo de la CAN">
 
         <nav>
             <ul>
                 <li><a href="index.html">Accueil</a></li>
-                <li><a href="boarding.html">Cartes d'embarquement</a></li>
-                <li class="current-menu"><a href="facture.html">Facture</a></li>
-                <li><a href="tableau.html">Tableau de bord</a></li>
+                <li class="current-menu"><a href="submitReservation.html">Voir une réservation</a></li> 
                 <li><a href="stats.html">Statistiques</a></li>
+                <li><a href="tableau.html">Tableau de bord</a></li>
             </ul>
         </nav>
 
-                
+        <img src="img/logo-iut.png" alt="Logo de l'IUT Robert Schuman">
 
-    <script src="script.js"></script>
+    </header>
+
+    <main>
+
+            <div class="sideBar leftSideBar">
+                
+            </div>
+
+            <section class="facture">
+                
+                <div class="center">
+                    <img src="img/logo.png" alt="Logo">
+
+                    <h1>Facture</h1>
+                </div>
+
+
+                <p>Illkirch le <span id="horodatage"></span></p>
+
+                <article class="infos">
+                    <p><strong>Réservation n° :</strong> <span id="reservationId"></span></p>
+                    <p><strong>Nom de réservation :</strong> <span id="reservationNom"></span></p>
+                    <br>
+                    <p><strong>Traversée :</strong> <span id="traversee"></span></p>
+                    <p><strong>Date :</strong> <span id="dateTraversee"></span></p>
+                    <p><strong>Départ :</strong> <span id="heureDepart"></span></p>
+                    <p><strong>Bateau :</strong> <span id="bateau"></span></p>
+                </article>
+
+                <h3>Les personnes : </h3>  
+                
+                <div class="center">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Catégorie</th>
+                                <th>Nombre</th>
+                                <th>Prix unitaire</th>
+                                <th>Prix ligne</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablePassagers">
+                            
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="tabulation">Sous-total personnes :<strong><span id="totalPassagers"></span> €</strong></p>
+
+                <h3>Les véhicules : </h3>
+                
+                <div class="center">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Catégorie</th>
+                                <th>Quantité</th>
+                                <th>Prix unitaire</th>
+                                <th>Prix ligne</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableVehicules">
+                            
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="tabulation">Sous-total véhicules :<strong> <span id="totalVehicules"></span> €</strong></p>
+
+
+                <p class="total">Prix total: <strong><span id="totalPrix"></span> €</strong></p>
+
+            </section>
+
+            <div class="sideBar rightSideBar">
+                
+            </div>
+
+    </main>
+  
+    <footer class="bottom">
+        <p>© CASELLA Louis, PAMPAGNIN Romain, SOHRABI Aquila -- 2025</p>
+    </footer>                
+
+    <script src="js/facture.js"></script>
 </body>
 </html>

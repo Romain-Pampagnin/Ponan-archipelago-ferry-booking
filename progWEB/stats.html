@@ -1,29 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
     <title>Statistiques</title>
 </head>
+
 <body>
 
-    <header>
-        <img src="other/logo.png" alt="Logo">
-
-    </header>
+    <header class="top">
+        
+        <img src="img/logo.png" alt="Logo de la CAN">
 
         <nav>
             <ul>
                 <li><a href="index.html">Accueil</a></li>
-                <li><a href="boarding.html">Cartes d'embarquement</a></li>
-                <li><a href="facture.html">Facture</a></li>
-                <li><a href="tableau.html">Tableau de bord</a></li>
+                <li><a href="submitReservation.html">Voir une réservation</a></li> 
                 <li class="current-menu"><a href="stats.html">Statistiques</a></li>
+                <li><a href="tableau.html">Tableau de bord</a></li>
             </ul>
         </nav>
 
-                
+        <img src="img/logo-iut.png" alt="Logo de l'IUT Robert Schuman">
 
-    <script src="script.js"></script>
+    </header>
+
+    <main>
+
+            <div class="sideBar leftSideBar">
+                
+            </div>
+
+            <div class="stats">
+                    
+                <h1>Statistiques des liaisons pour le mois de novembre 2025</h1>
+
+                <section>
+
+                    <article>
+                        <h2>Lorient > Groix</h2>
+                        <p>Chiffre d'affaire des passagers (en €)<span id="caPassagers1"></span></p>
+                        <p>Chiffre d'affaire des véhicules (en €)<span id="caVehicules1"></span></p>
+                        <p>Nombre de passagers<span id="nbPassagers1"></span></p>
+                        <p>Nombre de véhicules<span id="nbVehicules1"></span></p>
+                    </article>
+
+                    <article>
+                        <h2>Groix > Lorient</h2>
+                        <p>Chiffre d'affaire des passagers (en €)<span id="caPassagers2"></span></p>
+                        <p>Chiffre d'affaire des véhicules (en €)<span id="caVehicules2"></span></p>
+                        <p>Nombre de passagers<span id="nbPassagers2"></span></p>
+                        <p>Nombre de véhicules<span id="nbVehicules2"></span></p>
+                    </article>
+
+                    <article>
+                        <h2>Quiberon > Belle-Ile</h2>
+                        <p>Chiffre d'affaire des passagers (en €)<span id="caPassagers3"></span></p>
+                        <p>Chiffre d'affaire des véhicules (en €)<span id="caVehicules3"></span></p>
+                        <p>Nombre de passagers<span id="nbPassagers3"></span></p>
+                        <p>Nombre de véhicules<span id="nbVehicules3"></span></p>
+                    </article>
+
+                    <article>
+                        <h2>Belle-Ile > Quiberon</h2>
+                        <p>Chiffre d'affaire des passagers (en €)<span id="caPassagers4"></span></p>
+                        <p>Chiffre d'affaire des véhicules (en €)<span id="caVehicules4"></span></p>
+                        <p>Nombre de passagers<span id="nbPassagers4"></span></p>
+                        <p>Nombre de véhicules<span id="nbVehicules4"></span></p>
+                    </article>
+
+                </section>
+
+            </div>
+
+            <div class="sideBar rightSideBar">
+                
+            </div>
+
+    </main>
+  
+    <footer class="bottom">
+        <p>© CASELLA Louis, PAMPAGNIN Romain, SOHRABI Aquila - 2025</p>
+    </footer>
+
+    <script src="js/stats.js"></script>
+
 </body>
 </html>

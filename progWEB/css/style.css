@@ -1,135 +1,446 @@
-html{
-    background-color: #fff2e6; 
-	font-size: 16px;
-    font-family: Helvetica;
+html, body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #00273a;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
-nav a {
-	color: #0B638C; /* Couleur de texte des liens (blanc) */
-	font-weight: bold; /* Texte en gras */
-	text-decoration: none; /* Retire le soulignement des liens */
-}
-
-nav li:hover a, 
-li.current-menu a {
-    color: #000000; /* Change la couleur du texte des liens au survol ou si c'est l'item actif */
-}
-
-nav li:hover {
-	width: 105%; /* Agrandit légèrement l'item de menu lors du survol */
+* {
+    font-size: 16px;
 }
 
 main{
     display: flex;
-    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+.top, .bottom, .sideBar, .stats{
+    background-color: #00141f;
 }
 
-figure {
+li, button, .buttonSwipe, form button, form input {
+    background-color: #00273a;
+    color: white;
+    border: solid 0.1rem #15a5e8;
+}
+
+
+.top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: solid 0.1rem #15a5e8;
+}
+
+img {
+    border-radius: 1rem;
+}
+
+.top img {
+    width: 10rem;
+    height: auto;
+    margin: 1rem;
+}
+
+ul {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
     margin: 0;
+    padding: 0;
 }
 
-
-.InfoTrajet{
-    color: white;
-}
-
-.InfoReservation{
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 2rem;
-    height: 100%; 
-}
-
-.InfoVehicule{
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 2rem;
-    height: 100%; 
-}
-
-.CarteVehicule img{
-    border: 2px solid black;
-    border-radius: 2rem;
-}
-
-
-.CartePassager h1 {
-    color: white;
-    text-align: center;
-}
-
-.CartePassager img {
-    border: 2px solid black;
-    border-radius: 2rem;
-}
-
-.ColonneGauche{
+li, button{
     display: flex;
-    flex-direction: column;
-    width: 50%;
-}
-
-.ColonneDroite{
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-}
-
-.CartePassager{
-    display: flex;
-    flex-direction: row;
-
-    background-color: #0B638C;
-    border: 2px solid black;
-    border-radius: 2rem;
+    border-radius: 10rem;
+    padding: 1rem;
     margin: 1rem;
-}
-
-
-.CarteVehicule{
-    display: flex;
-
-    background-color: #0B638C;
-    border: 2px solid black;
-    border-radius: 2rem;
-    margin: 1rem;
-}
-
-.CarteVehicule h1 {
-    color: white;
     text-align: center;
-}
-
-.CarteVehiculex img {
-    border: 2px solid black;
-    border-radius: 2rem;
-}
-
-
-
-.InfoTrajet article{
-    display: flex;
-    flex-direction: row;
-}
-
-.InfoTrajet > article > p:first-child{
-    margin-right: 1rem;
+    width: 10rem;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s;
     font-weight: bold;
 }
 
-.InfoTrajet  p:nth-child(2)
-{
+a {
+    font-size: 1.5rem;
+	color: white; /* Couleur de texte des liens (blanc) */
+	font-weight: bold; /* Texte en gras */
+	text-decoration: none; /* Retire le soulignement des liens */
+}
+
+li.current-menu a {
+    color: #15a5e8; /* Change la couleur du texte des liens au survol ou si c'est l'item actif */
+}
+
+li:hover, button:hover {
+	transform: scale(1.05); /* Agrandit légèrement l'item de menu lors du survol */
+    box-shadow: 5px 5px 10px #15a5e8;
+}
+
+.sideBar {
+    width: 12rem;
+    border-top: solid 0.1rem #15a5e8;
+    border-bottom: solid 0.1rem #15a5e8;
+}
+
+.leftSideBar {
+    border-radius: 0 1rem 1rem 0;
+    border-right: solid 0.1rem #15a5e8;
+}
+
+.rightSideBar{
+    border-radius: 1rem 0 0 1rem;
+    border-left: solid 0.1rem #15a5e8;
+}
+    
+.bottom {
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    color: #ffffff;
+    border-top: solid 0.1rem #15a5e8;
+}
+
+.hidden {
+    display: none;
+}
+
+
+.carteEmbarquement{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color:#0B638C;
+    margin: 1rem;
+    padding: 1rem;
+    border: solid 5px black;
+    border-radius: 1rem;
+    color: white;
+
+    max-width: 70%;
+    max-height: auto;
+}
+
+.carteEmbarquement h1 {
+    font-size: 1.5rem;
+}
+
+.ColonneGauche, .ColonneDroite {
+    display: flex;
+    flex-direction: column;
+}
+
+.ColonneGauche {
+    width: 45%;
+}
+
+.ColonneDroite {
+    width: 45%;
+}
+
+.ColonneGauche figure {
+    margin: 0;
+    background-color: white;
+    border-radius: 1rem;
+    border: solid 5px black;
+}
+
+.ColonneGauche img {
+    max-width: 100%;
+}
+
+
+.InfoTrajet p {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+}
+
+.InfoTrajet span {
     background-color: white;
     color: black;
-}
-
-.InfoReservation article{
-    display: flex;
-    flex-direction: row;
-}
-
-.InfoReservation > article > p:first-child{
-    margin-right: 1rem;
+    padding: 8px;
+    border-radius: 1rem;
     font-weight: bold;
 }
 
+.ColonneDroite h1 {
+    text-align: center;
+    color: white;
+}
+
+.InfoReservation {
+    background-color: white;
+    color: black;
+    border: solid 5px black;
+    border-radius: 1rem;
+    font-weight: bold;
+}
+
+.InfoReservation  p {
+    display: flex;
+    justify-content: space-between;
+}
+
+.qrcode {
+    width: 20%;
+    border-radius: 0;
+}
+
+.carte {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.carte .buttonSwipe {
+    padding: 2rem;
+    width: 3rem; 
+    height: 3rem;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer; 
+    transition: transform 0.3s;
+    background-color: #00141f;
+}
+
+.carte .buttonSwipe:hover {
+    transform: scale(1.2); 
+    background-color: #15a5e8;
+}
+
+form {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    gap: 1rem; 
+    padding: 1.5rem; 
+    background-color: #00141f; 
+    border-radius: 1rem; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); 
+}
+
+form input{
+    padding: 0.8rem;
+    font-size: 1rem; 
+    
+    border-radius: 0.5rem; 
+    outline: none;
+    width: 20rem; 
+}
+
+
+form button {
+    padding: 0.8rem ; 
+    font-size: 1.2rem; 
+    font-weight: bold; 
+    border-radius: 0.5rem; 
+    cursor: pointer; 
+    transition: transform 0.3s 
+}
+
+form button:hover {
+    box-shadow: 2px 4px 8px #00aeff; 
+    transform: scale(1.1);
+}
+
+
+.middle {
+    margin: 5rem;
+    display:flex;
+    flex-direction: column;
+    color: rgb(214, 214, 214);
+    align-items: center;
+    text-align: center;
+}
+
+.middle img {
+    width: 30rem;
+}
+
+h1 {
+    font-size: 3rem
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+.facture h1 {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.facture {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    flex: 1;
+    margin: 5rem;
+    padding: 5rem;
+    border-radius: 1rem;
+
+}
+
+.facture .center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.facture .tabulation{
+    gap: 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.facture .total{
+    gap: 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.facture table {
+    border-collapse: collapse;
+    border:  1px solid black;
+}
+
+.facture th, .facture td {
+    padding: 1rem;
+    border: 1px solid black;
+}
+
+.facture img {
+    width: 40%;
+}
+
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    margin: 5rem;
+    padding: 2rem;
+    border-radius: 2rem;
+    border: solid 0.1rem #15a5e8;
+}
+
+.stats h1 {
+    text-align: center;
+}
+
+.stats article {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    background-color: #00273a;
+    margin: 5rem;
+    padding: 2rem;
+    border-radius: 2rem;
+}
+
+.stats h2 {
+    padding: 1rem;
+    text-align: center;
+    border: solid 1px white;
+    border-radius: 2rem;
+}
+
+.stats p {
+    gap: 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stats span {
+    font-weight: bold;
+    background-color: white;
+    color:#0B638C;
+    border-radius: 2rem;
+    padding: 1rem;
+}
+
+.tableauDeBord h1 {
+    text-align: center;
+    color: aliceblue;
+}
+.tableauDeBord form {
+    background-color: #0B638C;
+}
+
+
+.tableauDeBord .infos {
+    background-color: #0B638C;
+    border-radius: 2rem;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.tableauDeBord .infos article {
+    color: white;
+    background-color: #00141f;
+    border-radius: 2rem;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.tableauDeBord .infos p {
+    font-size: 1.2rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tableauDeBord .infos span {
+    padding: 1rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .top {
+        flex-direction: column;
+    }
+    
+    .top ul {
+        flex-direction: column;
+    }
+
+    main {
+        flex-direction: column;
+    }
+
+    .carteEmbarquement {
+        flex-direction: column;
+    }
+
+    .ColonneGauche {
+        width: 100%;
+    }
+
+    .ColonneDroite {
+        width: 100%;
+    }
+
+    .carte {
+        flex-direction: column;
+    }
+}
